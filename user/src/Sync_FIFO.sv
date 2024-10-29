@@ -1,23 +1,25 @@
+`timescale 1ns / 1ps
+`define SVA 
 module Sync_FIFO #(
     parameter  P_DATA_WIDTH = 8 ,
     parameter  P_FIFO_DEPTH = 16,
     parameter  P_FIFO_DWIDTH = $clog2(P_FIFO_DEPTH)
 ) 
 (
-    input      i_clk,
-    input      i_rst_n,
+    input                       i_clk,
+    input                       i_rst_n,
 
-    input       i_wren,
-    input [P_DATA_WIDTH-1:0]  i_wdata,
+    input                       i_wren,
+    input [P_DATA_WIDTH-1:0]    i_wdata,
     input       i_rden,
-    output [P_DATA_WIDTH-1:0]  o_rdata,
-    output                     o_rddata_valid,
+    output [P_DATA_WIDTH-1:0]   o_rdata,
+    output                      o_rddata_valid,
 
-    output                     o_fifo_full,
-    output                     o_fifo_empty,
+    output                      o_fifo_full,
+    output                      o_fifo_empty,
 
-    input  [P_FIFO_DWIDTH-1:0]   i_cfg_almost_full,
-    input  [P_FIFO_DWIDTH-1:0]   i_cfg_almost_empty,
+    input  [P_FIFO_DWIDTH-1:0]  i_cfg_almost_full,
+    input  [P_FIFO_DWIDTH-1:0]  i_cfg_almost_empty,
 
     output                      o_fifo_almost_full,
     output                      o_fifo_almost_empty,
@@ -40,7 +42,7 @@ logic   [P_FIFO_DWIDTH-1:0]  fifo_rd_ptr;
 //**************************************************
 integer i;
 //**************************************************
-logic   [P_FIFO_DWIDTH-1:0]  fifo_ram[P_FIFO_DEPTH-1:0];
+logic   [P_DATA_WIDTH-1:0]  fifo_ram[P_FIFO_DEPTH-1:0];
 //**************************************************
 assign  fifo_wr_ptr = fifo_wr_ptr_exp[P_FIFO_DWIDTH-1:0];
 assign  fifo_rd_ptr = fifo_rd_ptr_exp[P_FIFO_DWIDTH-1:0];
@@ -101,6 +103,18 @@ always_ff @(posedge i_clk or negedge i_rst_n) begin
     else
         rddata_valid <= 1'b0;
 end
+
+`ifdef SVA
+Bis0: assert property(rddata_valid_checker)
+else
+    $error("rddata_valid is not 1 @ %t", $time);
+
+property rddata_valid_checker;
+    @(posedge i_clk) i_rden |-> ##1 rddata_valid;
+endproperty
+`endif
+
+
 
     
 endmodule //Sync_FIFO
