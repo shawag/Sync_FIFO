@@ -25,8 +25,8 @@ wire                       fifo_almost_empty;
 wire [P_FIFO_DWIDTH-1:0]   fifo_space;
 
 
-logic [P_DATA_WIDTH-1:0]    wdata_array[$];
-logic [P_DATA_WIDTH-1:0]    rdata_array[$];
+logic [P_DATA_WIDTH-1:0]    wdata_array[ $];
+logic [P_DATA_WIDTH-1:0]    rdata_array[ $];
 
 integer                     wr_cnt;
 integer                     rd_cnt;
@@ -103,6 +103,7 @@ initial begin
         end
         else
             wren = 0;
+            
         if(~(~sample_empty & rden))
             rden = 0;    
     end

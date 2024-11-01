@@ -24,7 +24,7 @@ module Sync_FIFO #(
     output                      o_fifo_almost_full,
     output                      o_fifo_almost_empty,
 
-    output [P_FIFO_DWIDTH-1:0]  o_fifo_space
+    output [P_FIFO_DWIDTH:0]  o_fifo_space
     
 );
 //**************************************************
