@@ -22,7 +22,7 @@ logic                       sample_empty;
 
 wire                       fifo_almost_full;
 wire                       fifo_almost_empty;
-wire [P_FIFO_DWIDTH-1:0]   fifo_space;
+wire [P_FIFO_DWIDTH:0]   fifo_space;
 
 
 logic [P_DATA_WIDTH-1:0]    wdata_array[ $];
@@ -103,7 +103,7 @@ initial begin
         end
         else
             wren = 0;
-            
+
         if(~(~sample_empty & rden))
             rden = 0;    
     end
